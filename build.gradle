@@ -1,0 +1,87 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+    id 'org.springframework.boot' version '2.7.5' apply false
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'java'
+    id 'io.freefair.lombok' version '6.5.1'
+    id 'com.google.cloud.tools.jib' version '3.3.1'
+    id 'com.avast.gradle.docker-compose' version '0.16.9'
+}
+
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+    gradlePluginPortal()
+    mavenLocal()
+}
+
+ext {
+    meta = [
+            buildBy: System.getProperty('user.name'),
+            createdBy: "${System.getProperty('java.version')} (${System.getProperty('java.specification.vendor')})",
+            projectGroup: 'ru.kovalev.employee',
+            description: "Employee Project",
+            orgName: "Homemade RnD"
+    ]
+    versions = [
+            javaVersion: JavaVersion.VERSION_17,
+            springBoot: '2.7.3',
+            testcontainersVersion: '1.17.4'
+    ]
+
+    set('javaNio', "java.base/java.nio=ALL-UNNAMED")
+}
+
+configure(allprojects) {
+    group = meta.projectGroup
+    version = '0.0.1-SNAPSHOT'
+    description = meta.description
+    sourceCompatibility = versions.javaVersion
+
+    ext {
+        buildInfo = [
+                'Build-Artifact': project.name,
+                'Build-Group': project.group,
+                'Build-Name': project.description,
+                'Build-Time': new Date().format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", TimeZone.getTimeZone('GMT')),
+                'Build-Timestamp': System.currentTimeMillis(),
+                'Build-Version': project.version,
+        ]
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom SpringBootPlugin.BOM_COORDINATES
+        mavenBom "org.testcontainers:testcontainers-bom:${versions.testcontainersVersion}"
+    }
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-data-jdbc"
+
+    runtimeOnly "org.postgresql:postgresql"
+    runtimeOnly "org.liquibase:liquibase-core"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.testcontainers:junit-jupiter"
+    testImplementation "org.testcontainers:postgresql"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}

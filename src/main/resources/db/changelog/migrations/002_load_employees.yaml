@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: "002"
+      author: dkovalev
+      changes:
+        - loadData:
+            columns:
+              - column:
+                  header: employee_id
+                  name: employee_id
+                  type: NUMERIC
+              - column:
+                  header: supervisor_id
+                  name: supervisor_id
+                  type: NUMERIC
+              - column:
+                  header: full_name
+                  name: full_name
+                  type: VARCHAR
+            file: employee_multi_roots.csv
+            quotchar: '"'
+            relativeToChangelogFile: true
+            separator: ","
+            tableName: employee
+            usePreparedStatements: true

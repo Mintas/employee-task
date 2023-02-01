@@ -1,0 +1,16 @@
+spring:
+  main:
+    banner-mode: off
+  liquibase:
+    url: ${employee.db.url}
+    user: ${employee.db.username}
+    password: ${employee.db.password}
+  datasource:
+    url: ${employee.db.url}
+    username: ${employee.db.username}
+    password: ${employee.db.password}
+employee:
+  db:
+    url: jdbc:postgresql://localhost:5432/employee
+    username: postgres
+    password: postgres
