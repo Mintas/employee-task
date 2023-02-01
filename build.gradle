@@ -41,6 +41,8 @@ ext {
     ]
 
     set('javaNio', "java.base/java.nio=ALL-UNNAMED")
+
+    employeeAppGeneratedResDir = "${buildDir}/generated/resources/main"
 }
 
 configure(allprojects) {
@@ -58,6 +60,12 @@ configure(allprojects) {
                 'Build-Timestamp': System.currentTimeMillis(),
                 'Build-Version': project.version,
         ]
+    }
+}
+
+sourceSets {
+    main {
+        resources.srcDirs += employeeAppGeneratedResDir
     }
 }
 
@@ -85,3 +93,81 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+task sourceJar(type: Jar) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+tasks.withType(Jar) {
+    doFirst {
+        manifest {
+            attributes([
+                    'Add-Opens': javaNio,
+                    'Created-By': meta.createdBy,
+                    'Built-By': meta.buildBy,
+
+                    'Implementation-Title': project.description,
+                    'Implementation-Vendor': meta.orgName,
+                    'Implementation-Vendor-Id': project.group,
+                    'Implementation-Version': project.version,
+
+                    'Specification-Title': project.description,
+                    'Specification-Version': project.version,
+                    'Specification-Vendor': meta.orgName
+            ] + buildInfo)
+        }
+    }
+}
+
+tasks.register('buildInfoGenerate').configure {
+    doLast {
+        file("${employeeAppGeneratedResDir}/META-INF").mkdirs()
+        file("${employeeAppGeneratedResDir}/META-INF/build-info.properties").text = buildInfo
+                .collect { k, v -> "${k.toLowerCase().replace('-', '.')} = ${v}" }
+                .join('\n')
+    }
+}
+
+tasks.withType(ProcessResources) {
+    dependsOn tasks.buildInfoGenerate
+}
+
+
+jib {
+    from {
+        image = "openjdk:17-oracle"
+    }
+    to {
+        image = "kovalev-${project.name}:${project.version}"
+    }
+    extraDirectories {
+        paths = "$rootDir/image"
+        permissions = [
+                '/*.sh': '755'
+        ]
+    }
+    container {
+        entrypoint = ['/employee.sh']
+    }
+    containerizingMode = 'packaged'
+    allowInsecureRegistries = true
+}
+
+dockerCompose {
+    projectName = 'employee-hierarchy-project'
+    useComposeFiles = ['docker-compose.yml']
+    buildBeforeUp = false
+    checkContainersRunning = false
+    tcpPortsToIgnoreWhenWaiting = [9092]
+}
+
+tasks.jibDockerBuild.finalizedBy tasks.composeUp
+
+task letsRun {
+    doLast {
+        println 'Hello from alpha'
+    }
+}
+letsRun.dependsOn tasks.build
+letsRun.finalizedBy tasks.jibDockerBuild

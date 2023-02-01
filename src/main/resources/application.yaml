@@ -1,6 +1,7 @@
 spring:
   main:
     banner-mode: off
+    web-application-type: none
   liquibase:
     url: ${employee.db.url}
     user: ${employee.db.username}

@@ -32,7 +32,7 @@ public class ConsoleApp implements CommandLineRunner {
         afterInitialize();
 
         while (in.hasNext()) {
-            String input = in.next();
+            String input = in.nextLine();
             if (EXIT_COMMAND.equalsIgnoreCase(input)) {
                 break;
             }

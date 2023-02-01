@@ -15,10 +15,12 @@ services:
       timeout: 5s
       retries: 10
 
-#  employee:
-#    image: kovalev-employee:0.0.1-SNAPSHOT
-#    depends_on:
-#      liquibase:
-#        condition: service_completed_successfully
-#    environment:
-#      - EMPLOYEE_DB_URL=jdbc:postgresql://postgres:5432/employee
+  employee:
+    image: kovalev-employee-task:0.0.1-SNAPSHOT
+    depends_on:
+      postgres:
+        condition: service_healthy
+    stdin_open: true
+    tty: true
+    environment:
+      - EMPLOYEE_DB_URL=jdbc:postgresql://postgres:5432/employee
