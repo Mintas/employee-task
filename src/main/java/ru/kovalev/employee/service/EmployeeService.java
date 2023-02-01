@@ -21,7 +21,6 @@ public class EmployeeService {
     }
 
     public EmployeeNamesInStructure find(Integer employeeId) {
-        System.out.printf("Attempting to find employee with id %s%n", employeeId);
         HierarchyNode<Integer, Employee> employee = employeeHierarchy.findNode(employeeId);
         if (employee == null) {
             throw new EmployeeNotFoundException(employeeId);

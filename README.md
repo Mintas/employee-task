@@ -6,7 +6,7 @@ For further reference, please consider the following sections:
 * git clone project repo (e.g. https://github.com/Mintas/employee-task )
 * run './gradlew letsRun -x test'  (there are integration tests that can take time)
 * it will build project (skipping tests), pack image and start docker-compose
-* open ??? in your ???
+* docker attach employee-hierarchy-project_employee_1
 * have fun
 
 ### Troubleshooting
@@ -26,5 +26,5 @@ In case of any problems with build and run contact me.
 Ordered by implementation priority
 1. add more javadocs
 2. add more tests
-3. improve running and readme
-4. add static code analisys: pmd, checkstyle; add jacoco
+3. improve readme
+4. add static code analysis: pmd, checkstyle; add jacoco

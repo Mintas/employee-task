@@ -158,8 +158,7 @@ dockerCompose {
     projectName = 'employee-hierarchy-project'
     useComposeFiles = ['docker-compose.yml']
     buildBeforeUp = false
-    checkContainersRunning = false
-    tcpPortsToIgnoreWhenWaiting = [9092]
+    checkContainersRunning = true
 }
 
 tasks.jibDockerBuild.finalizedBy tasks.composeUp

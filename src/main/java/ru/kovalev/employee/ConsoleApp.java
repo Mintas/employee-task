@@ -12,12 +12,10 @@ import ru.kovalev.employee.service.InputHandler;
 public class ConsoleApp implements CommandLineRunner {
     private static final String EXIT_COMMAND = "exit";
     private static final String COMMAND_LIST = """
-               List of commands supported:
-                 "exit" -- will stop the application;
-                 "id" -- will show the information about employee; example input: 4; example output:
-                    name: John Doe Jr
-                    supervisor: John Doe Sr
-                    subordinates: Biba Bro, Boba Mate, Cute Dude
+           List of commands supported:
+            "exit" -- will stop the application;
+            "id" -- will show the information about employee; example input: 4; example output:
+                EmployeeNamesInStructure[supervisorName=John Doe Jr, fullName=John Doe Sr, subordinateNames=[Biba Bro, Boba Mate, Cute Dude]]
             """;
     private final InputHandler inputHandler;
 
@@ -52,7 +50,7 @@ public class ConsoleApp implements CommandLineRunner {
             System.err.printf("Unrecognized input: \"%s\"%n", input);
             System.out.println(COMMAND_LIST);
         } else {
-            System.out.println("Enter next command =)");
+            System.out.println("Enter next command =)\n");
         }
     }
 
