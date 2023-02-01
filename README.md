@@ -1,9 +1,9 @@
-# Shopping Cart
+# Employee Hierarchy
 
 ### How-to guide
 For further reference, please consider the following sections:
 
-* git clone project repo (e.g. https://github.com/Mintas/***.git )
+* git clone project repo (e.g. https://github.com/Mintas/employee-task )
 * run './gradlew letsRun -x test'  (there are integration tests that can take time)
 * it will build project (skipping tests), pack image and start docker-compose
 * open ??? in your ???
