@@ -5,6 +5,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -20,11 +21,14 @@ public class Hierarchy<K, V> {
     /**
      * Calculate length of the longest path from root node to leaf in hierarchy
      * using non-recursive (iterative DFS) with LinkedList as Stack
+     *
      * @return maximum depth, including root
      */
     public int maxDepth() {
         Deque<HierarchyNode<K, V>> stack = new LinkedList<>();
         stack.push(tree);
+        HierarchyNode<K, V> deepest = tree;
+
         Deque<Integer> depths = new LinkedList<>();
         int depth = 1;
         depths.push(depth);
@@ -35,6 +39,7 @@ public class Hierarchy<K, V> {
 
             if (currentDepth > depth) {
                 depth = currentDepth;
+                deepest = current;
             }
             currentDepth += 1;
             for (HierarchyNode<K, V> child : current.children) {
@@ -42,7 +47,21 @@ public class Hierarchy<K, V> {
                 depths.push(currentDepth);
             }
         }
+
+        printPath(deepest);
         return depth;
+    }
+
+    private void printPath(HierarchyNode<K, V> deepest) {
+        List<HierarchyNode<K, V>> pathBackward = new ArrayList<>();
+        while (deepest.parentId != null) {
+            pathBackward.add(deepest);
+            deepest = index.get(deepest.parentId);
+        }
+        System.out.println(pathBackward.stream()
+                .map(hn -> hn.value)
+                .map(Object::toString)
+                .collect(Collectors.joining(" <- ")));
     }
 
     @RequiredArgsConstructor

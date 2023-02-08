@@ -26,6 +26,7 @@ public class EmployeeService {
             throw new EmployeeNotFoundException(employeeId);
         }
         HierarchyNode<Integer, Employee> supervisor = employeeHierarchy.findNode(employee.getParentId());
+        //
         return new EmployeeNamesInStructure(fullName(supervisor), fullName(employee),
                 employee.getChildren().stream().map(this::fullName).toList());
     }

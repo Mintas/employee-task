@@ -13,4 +13,9 @@ public class Employee {
     private final Integer employeeId;
     private final Integer supervisorId;
     private final String fullName;
+
+    @Override
+    public String toString() {
+        return employeeId + " " + fullName;
+    }
 }
